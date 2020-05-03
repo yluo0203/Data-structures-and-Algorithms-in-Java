@@ -11,6 +11,15 @@ public class TonyQueue {
         this.list = new Node[maxSize];
     }
 
+    public int peek(){
+        if (size == 0) return -1;
+        return list[size - 1].val;
+    }
+
+    public int size(){
+        return size;
+    }
+
     public int poll() {
         if (size == 0) return -1;
         int top = list[0].val;

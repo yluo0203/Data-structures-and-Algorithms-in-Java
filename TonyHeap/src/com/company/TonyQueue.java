@@ -13,7 +13,7 @@ public class TonyQueue {
 
     public int peek(){
         if (size == 0) return -1;
-        return list[size - 1].val;
+        return list[0].val;
     }
 
     public int size(){

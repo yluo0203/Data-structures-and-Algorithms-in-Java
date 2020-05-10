@@ -6,33 +6,38 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        int[][] matrix = {  {1, 2, 3, 4, 5},
-                            {2, 3, 4, 5, 6},
-                            {3, 4, 5, 6, 7},
-                            {4, 5, 6, 7, 8},
-                            {5, 6, 7, 8, 9}};
-        int k = 4;
+        int[][] matrix;
 
-        System.out.println(findKth(matrix, k));
-//         System.out.println(findMin(matrix, k));
+        for (int k = 0; k < 30; k++) {
+            matrix = createMatrix();
+            System.out.println(k + "-th smallest element: " + findKth(matrix, k));
+        }
+    }
 
+    private static int[][] createMatrix(){
+        int[][] matrix = {
+                {1, 2, 3, 4, 5},
+                {2, 3, 4, 5, 6},
+                {3, 4, 5, 6, 7},
+                {4, 5, 6, 7, 8},
+                {5, 6, 7, 8, 9}};
+        return matrix;
     }
 
 //    Ref: https://www.geeksforgeeks.org/kth-smallest-element-in-a-row-wise-and-column-wise-sorted-2d-array-set-1/
-    private static class Cell implements Comparable<Cell> {
+    private static class HeapNode implements Comparable<HeapNode>{
         int val;
         int r, c;
-        Cell(int num, int r, int c) {
+        HeapNode(int num, int r, int c) {
             this.val = num;
             this.r = r;
             this.c = c;
         }
 
         @Override
-        public int compareTo(Cell that) {
+        public int compareTo(HeapNode that) {
             return this.val - that.val;
         }
-
     }
 
     //    Ref: https://stackoverflow.com/questions/15179536/kth-smallest-element-in-sorted-matrix
@@ -41,21 +46,20 @@ public class Main {
             return 0;
         }
         int min = matrix[0][0];
-        PriorityQueue<Cell> heap = new PriorityQueue<>();
-        heap.add(new Cell(min, 0, 0));
-
-        while (k > 0) {
-            Cell node = heap.poll();
+        PriorityQueue<HeapNode> heap = new PriorityQueue<>();
+        heap.add(new HeapNode(min, 0, 0));
+        while (!heap.isEmpty()) {
+            HeapNode node = heap.poll();
             int row = node.r;
             int col = node.c;
 
             if (row + 1 < matrix.length && matrix[row + 1][col] != -1) {
-                heap.add(new Cell(matrix[row + 1][col], row + 1, col));
+                heap.add(new HeapNode(matrix[row + 1][col], row + 1, col));
                 matrix[row + 1][col] = -1;
             }
 
             if (col + 1 < matrix[0].length && matrix[row][col + 1] != -1) {
-                heap.add(new Cell(matrix[row][col + 1], row, col + 1));
+                heap.add(new HeapNode(matrix[row][col + 1], row, col + 1));
                 matrix[row][col + 1] = -1;
             }
 
@@ -64,7 +68,8 @@ public class Main {
                 k--;
             }
 
+            if (k == 0) return min;
         }
-        return min;
+        return -1;
     }
 }

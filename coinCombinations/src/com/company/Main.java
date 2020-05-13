@@ -4,13 +4,39 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-//        Coins: $25, $10, $5, $1
         int money = 50;
-        coinCombinations2(money);
+
+        //        Coins: $25, $10, $5, $1
         int[] coins = {25, 10, 5, 1};
-//        coinCombinations1(money, coins);
+        coinCombinations1(money, coins);
+//        coinCombinations2(money);
+
+    }
+    // Method 1.
+    private static void coinCombinations1(int total, int[] coins) {
+        int[] sol = new int[coins.length];
+        helper1(total, coins, sol, 0);
     }
 
+    private static void helper1(int total, int[] coins, int[] sol, int level) {
+        if (level == coins.length - 1) {
+            int current = 0;
+            for (int i = 0; i < coins.length - 1; i++) {
+                current += coins[i] * sol[i];
+            }
+            System.out.print("C25: " + sol[0] + " + C10: " + sol[1] + " + C5: " + sol[2] + " + C1: " + total);
+            System.out.println(" --> Total: $" + (current + total));
+            return;
+        }
+
+        for (int i = 0; i <= total / coins[level]; i++) {
+            sol[level] = i;
+            total -= coins[level] * i;
+            helper1(total, coins, sol, level + 1);
+            total += coins[level] * i;
+            sol[level] = 0;
+        }
+    }
 
     //Method 2.
     private static void coinCombinations2(int total) {

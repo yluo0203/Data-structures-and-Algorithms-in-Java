@@ -19,5 +19,11 @@ public class Main {
 
         mySet.clear();
         mySet.print();
+
+//        for (int i = 0; i < 1000; i++) {
+//            int num = (int)(Math.random() * 100 * Math.random());
+//            mySet.add(num);
+//        }
+//        mySet.print();
     }
 }

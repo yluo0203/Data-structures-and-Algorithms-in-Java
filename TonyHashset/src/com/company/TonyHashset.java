@@ -13,7 +13,7 @@ public class TonyHashset {
 
     private int hash(int val) {
         int hashVal = val;
-//        hashVal = val.hashCode();
+        //hashVal = val.hashCode();
         hashVal %= this.size;
         return hashVal;
     }

@@ -38,8 +38,7 @@ public class Main {
                 str.setCharAt(slow++, str.charAt(fast++));
             }
         }
-        String result = str.substring(0, slow);
-        str.replace(0, str.length(), result);
+        str.replace(0, str.length(), str.substring(0, slow));
     }
 
     private static boolean isSubString(StringBuilder str, int index, String s1) {

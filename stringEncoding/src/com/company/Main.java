@@ -4,45 +4,71 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        StringBuilder str = new StringBuilder("aaaabccaaaaa");
+        StringBuilder str = new StringBuilder("xaaaabccaaaaax");
         encodeString(str);
-        System.out.println(str); // --> "a4bc2a5 " --> "a4b1c2a5"
+        System.out.println("Encode: " + str); // --> "xa4bc2a5x   " --> "x1a4b1c2a5x1"
     }
 
     private static void encodeString(StringBuilder str){
+        System.out.println("Raw code: " + str);
         if (str == null || str.length() == 0) return;
         int slow = 0;
         int fast = 0;
         int reserveSpace = 0;
         Integer charCount = 1;
+        slow = 0;
+        fast = 0;
         while (fast < str.length()) {
             if (isUnique(str, fast)) {
                 reserveSpace++;
-            }
-            if (fast != 0 && str.charAt(fast) != str.charAt(fast - 1) || fast == str.length() - 1) {
-                if (fast == str.length() - 1 && !isUnique(str, fast)) charCount++;
-                if (charCount != 1) {
-                    str.setCharAt(++slow, (char)(charCount + '0'));
+                str.setCharAt(slow++, str.charAt(fast));
+                fast++;
+            } else {
+                str.setCharAt(slow++, str.charAt(fast));
+                fast++;
+                // Count same char.
+                while (fast < str.length() && (fast == 0 || (fast != 0 && str.charAt(fast) == str.charAt(fast - 1)))) {
+                    charCount++;
+                    fast++;
                 }
-                slow++;
-                str.setCharAt(slow, str.charAt(fast));
-                charCount = 1;
-            } else if (fast != 0 && str.charAt(fast) == str.charAt(fast - 1)) {
-                charCount++;
+                // Find the 1st char.
+                if ((fast < str.length() && (fast != 0 && str.charAt(fast) != str.charAt(fast - 1))) || (fast >= str.length() - 1)) {
+//                    str.setCharAt(slow++, str.charAt(fast));
+                    if (charCount != 1) {
+                        str.setCharAt(slow++, (char) (charCount + '0'));
+                    }
+                    charCount = 1;
+                }
             }
-            fast++;
         }
+
+//        while (fast < str.length()) {
+//            if (isUnique(str, fast)) {
+//                reserveSpace++;
+//            }
+//            if (fast != 0 && str.charAt(fast) != str.charAt(fast - 1) || fast == str.length() - 1) {
+//                if (fast == str.length() - 1 && !isUnique(str, fast)) charCount++;
+//                if (charCount != 1) {
+//                    str.setCharAt(++slow, (char)(charCount + '0'));
+//                }
+//                slow++;
+//                str.setCharAt(slow, str.charAt(fast));
+//                charCount = 1;
+//            } else if (fast != 0 && str.charAt(fast) == str.charAt(fast - 1)) {
+//                charCount++;
+//            }
+//            fast++;
+//        }
 
         for(int i = 0; i < reserveSpace; i++) {
             str.setCharAt(slow++, ' ');
         }
-        str.replace(0, str.length(), str.substring(0, slow)); //--> a4bc2a5
-        System.out.println(str);
+        str.replace(0, str.length(), str.substring(0, slow));
+        System.out.println("1st round: " + str);
 
         slow = str.length() - 1;
         fast = str.length() - 1;
         while (fast >= 0) {
-//            System.out.println(slow + " <--> " + str.charAt(slow));
             while (fast >= 0 && str.charAt(fast) == ' ') {
                 fast--;
             }
@@ -50,10 +76,9 @@ public class Main {
                 str.setCharAt(slow, '1');
                 slow--;
             }
-//            if (fast >= 0) {
-                str.setCharAt(slow--, str.charAt(fast--));
-//            }
+            str.setCharAt(slow--, str.charAt(fast--));
         }
+        System.out.println("2nd round: " + str);
     }
 
     private static boolean isUnique(StringBuilder str, int index) {
